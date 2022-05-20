@@ -1,0 +1,2 @@
+uint8 ver_head
+uint8 ver_tail
