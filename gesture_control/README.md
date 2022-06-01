@@ -57,7 +57,7 @@ gesture_control app功能为通过手势控制小R机器人小车运动，包括
 
 具备小R机器人小车，包括安装了X3开发板（X3 sdb或者X3 Pi）和camera传感器（USB或MIPI camera）。
 
-launch启动文件默认配置使用的是F37 MIPI camera，切换成使用USB camera的方法：todo。
+launch启动文件默认配置使用的是usb camera。
 
 ### 软件依赖
 
@@ -90,7 +90,7 @@ cp -r install/lib/hand_lmk_detection/config/ .
 cp -r install/lib/hand_gesture_detection/config/ .
 
 #启动launch文件，文件中配置使能了激活手势
-ros2 launch install/lib/hobot_app_xrrobot_gesture_control/launch/hobot_app_xrrobot_gesture_control.launch.py
+ros2 launch install/share/hobot_app_xrrobot_gesture_control/launch/hobot_app_xrrobot_gesture_control.launch.py
 ```
 
 ### **Linux**

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(hobot_app_xrrobot_gesture_control)
+project(hobot_app_xrrobot_body_tracking)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)

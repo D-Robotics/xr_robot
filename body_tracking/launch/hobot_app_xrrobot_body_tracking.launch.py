@@ -30,6 +30,7 @@ def generate_launch_description():
             ],
             arguments=['--ros-args', '--log-level', 'error']
         ),
+
         # 启动jpeg图片编码&发布pkg
         Node(
             package='hobot_codec',
@@ -46,6 +47,7 @@ def generate_launch_description():
             ],
             arguments=['--ros-args', '--log-level', 'error']
         ),
+        
         # 启动单目rgb人体、人头、人脸、人手框和人体关键点检测pkg
         Node(
             package='mono2d_body_detection',
@@ -92,25 +94,29 @@ def generate_launch_description():
         ),
         # 启动手势交互pkg
         Node(
-            package='gesture_control',
-            executable='gesture_control',
+            package='body_tracking',
+            executable='body_tracking',
             output='screen',
             parameters=[
                 {"ai_msg_sub_topic_name": "/hobot_hand_gesture_detection"},
                 {"twist_pub_topic_name": "/cmd_vel"},
-                {"activate_wakeup_gesture": 1},
+                {"activate_wakeup_gesture": 0},
+                {"img_width": 960},
+                {"img_height": 544},
                 {"track_serial_lost_num_thr": 100},
-                {"move_step": 0.5},
-                {"rotate_step": 0.5}
+                {"move_step": 0.3},
+                {"rotate_step": 0.5},
+                {"activate_robot_move_thr": 5},
+                {"activate_robot_rotate_thr": 45}
             ],
             arguments=['--ros-args', '--log-level', 'warn']
         ),
-        
-        # 启动小R机器⼈小⻋pkg
+
+        # 启动小R机器⼈小⻋
         Node(
             package='xrrobot',
             executable='xrrobot',
             output='screen',
-            arguments=['--ros-args', '--log-level', 'info']
+            arguments=['--ros-args', '--log-level', 'warn']
         )
     ])
