@@ -28,11 +28,12 @@ body_tracking app功能为控制机器人跟随人体运动。
 
 使用"OK"手势作为唤醒跟随手势，手势动作举例如下：
 
-![image-ok](images/image-ok.png)
+<img src="images/image-ok.png" width="100" height="100"/>
 
 使用"Palm"手势作为取消跟随手势，取消后需要重新使用唤醒手势选择跟随人体。手势动作举例如下：
 
-![image-palm](images/image-palm.png)
+<img src="images/image-palm.png" width="100" height="100"/>
+
 
 ## 控制策略
 
