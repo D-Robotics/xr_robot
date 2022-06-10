@@ -5,7 +5,7 @@
   <version>0.0.0</version>
   <description>TODO: Package description</description>
   <maintainer email="zhuo.wang@horizon.ai">zhuo</maintainer>
-  <license>TODO: License declaration</license>
+  <license>Apache License 2.0</license>
 
   <depend>rclcpp</depend>
   <depend>std_msgs</depend>
