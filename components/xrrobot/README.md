@@ -1,18 +1,20 @@
-## package name
+English| [简体中文](./README_cn.md)
 
-xrrobot 
+## Package name
 
-## package功能
+xrrobot
 
-小R机器人的驱动程序，完成以下功能：
-1. 获取并发布原始传感器数据，比如/raw_odom，/raw_imu
-2. 订阅 /cmd_vel 话题，并控制小车运动
+## Package Functionality
 
-## package编译
+Driver program for XrRobot, which accomplishes the following functions:
+1. Get and publish raw sensor data, such as /raw_odom, /raw_imu
+2. Subscribe to the /cmd_vel topic and control the movement of the robot
+
+## Package Compilation
 
 `colcon build --packages-select xrrobot xrrobot_msgs`
 
-## 运行package
+## Running the Package
 
 ```
 export COLCON_CURRENT_PREFIX=./install

@@ -1,95 +1,95 @@
-# 功能介绍
+English| [简体中文](./README_cn.md)
 
-gesture_control app功能为通过手势控制小R机器人小车运动，包括左右旋转和前后平移运动。
+# Feature Introduction
 
-支持的控制手势和手势功能定义如下表格：
+The gesture_control app allows for controlling the movement of the small R robot car through gestures, including left and right rotation, as well as forward and backward translation.
 
-| 手势名称              | 功能定义 | 手势动作举例                                     |
-| --------------------- | -------- | ------------------------------------------------ |
-| 666手势/Awesome       | 前进     | <img src="images/image-awesome.png" width="100" height="100"/>       |
-| yeah/Victory          | 后退     | <img src="images/image-victory.png" width="100" height="100"/>          |
-| 大拇指向右/ThumbRight | 右转     | <img src="images/image-thumbright.png" width="100" height="100"/> |
-| 大拇指向左/ThumbLeft  | 左转     | <img src="images/image-thumbleft.png" width="100" height="100"/>   |
-| OK/Okay               | 唤醒     | <img src="images/image-ok.png" width="100" height="100"/>             |
-| 手掌/Palm             | 重置     | <img src="images/image-palm.png" width="100" height="100"/>             |
+The supported control gestures and their definitions are listed in the table below:
 
-其中点赞、yeah、大拇指向右和大拇指向左4种手势用于控制机器人前后或旋转运动。OK手势用于手势控制唤醒功能，手掌手势用于重置控制功能，详细的控制说明如下：
+| Gesture Name          | Function Definition | Gesture Example                                              |
+| --------------------- | ------------------- | ------------------------------------------------------------ |
+| 666 gesture/Awesome   | Forward             | <img src="images/image-awesome.png" width="100" height="100"/> |
+| yeah/Victory          | Backward            | <img src="images/image-victory.png" width="100" height="100"/> |
+| ThumbRight            | Right Turn          | <img src="images/image-thumbright.png" width="100" height="100"/> |
+| ThumbLeft             | Left Turn           | <img src="images/image-thumbleft.png" width="100" height="100"/> |
+| OK/Okay               | Wake Up             | <img src="images/image-ok.png" width="100" height="100"/> |
+| Palm                  | Reset               | <img src="images/image-palm.png" width="100" height="100"/> |
 
-## 唤醒手势
+Among these gestures, thumbs up, yeah, thumb right, and thumb left are used for controlling the robot's forward, backward, or rotation movements. The OK gesture is for waking up the gesture control function, while the palm gesture is for resetting the control function. Detailed control instructions are as follows:
 
-唤醒手势用于唤醒通过手势控制机器人的功能。
+## Wake Up Gesture
 
-当启用唤醒手势时，只有做了唤醒手势的hand才能通过4种控制手势控制机器人。一般用于人较多，环境复杂的场景，通过启用唤醒手势避免误触发手势控制功能。
+The wake up gesture is used to activate the gesture control of the robot.
 
-当未启用唤醒手势时，直接通过上述4种控制手势触发控制机器人功能。
+When the wake up gesture is enabled, only the hand that performs the wake up gesture can control the robot through the 4 control gestures. This is generally used in scenarios with many people and complex environments to avoid unintentional triggering of the gesture control function.
 
-## 重置手势
+When the wake up gesture is not enabled, the control of the robot is directly triggered by the 4 control gestures mentioned above.
 
-重置手势用于重置手势控制机器人的功能。只有当启用了唤醒手势时，重置手势才有效。
+## Reset Gesture
 
-当识别到控制手作出重置手势时，重置手势控制功能，重新选择控制手。
+The reset gesture is used to reset the gesture control of the robot. The reset gesture is only effective when the wake up gesture is enabled.
 
-## 控制手（controler）的选择
+When a reset gesture is recognized, the gesture control function is reset, and a new control hand is selected.
 
-当启用唤醒手势时，做唤醒手势的hand会作为controler，只有这个hand做手势才能控制机器人运动。
+## Selection of Control Hand
 
-当未启用唤醒手势时，选择做了上述4种控制手势的hand作为controler。
+When the wake up gesture is enabled, the hand that performs the wake up gesture will act as the controller, and only this hand can control the movement of the robot.
 
-选择控制手时，如果有多个hand同时做手势，选择hand检测框宽度最大的hand作为controler。
+When the wake up gesture is not enabled, the hand that performs the aforementioned 4 control gestures will be selected as the controller.
 
-已有controler的情况下，其他hand做唤醒手势或者控制手势都无效。
+When selecting the control hand, if multiple hands perform gestures simultaneously, the hand with the widest bounding box width will be chosen as the controller.
 
-只有当作为controler的hand消失或者做出重置手势时，才会重新寻找新的controler。连续track_serial_lost_num_thr（默认100）帧未检测到hand，判断hand（controler）消失。
+If there is already a controller, other hands performing wake up gestures or control gestures will be invalid.
 
-## 控制策略
+Only when the hand acting as the controller disappears or makes a reset gesture will a new controller be searched for. If a hand (controller) is not detected for track_serial_lost_num_thr frames in a row (default 100 frames), it is considered that the hand (controller) has disappeared.
 
-已找到作为controler的hand后，对于每一帧输入的智能结果处理策略如下：
+## Control Strategy
 
-当前帧中无此控制手，停止机器人运动。
+Once the hand acting as the controller is identified, the strategy for handling intelligent input results for each frame is as follows:
 
-当前帧中有此控制手，判断此hand有无控制手势，如无，停止机器人运动，如有，控制机器人做对应的运动。
+If there is no control hand in the current frame, the robot's movement will stop.
 
-# 使用介绍
+If there is a control hand in the current frame, it will be determined whether this hand is making a control gesture. If not, the robot's movement will stop; if yes, the robot will be controlled to perform the corresponding movement.# User Manual
 
-## 依赖
+## Dependencies
 
-### 硬件依赖
+### Hardware Requirements
 
-具备小R机器人小车，包括安装了X3开发板（X3 sdb或者X3 Pi）和camera传感器（USB或MIPI camera）。
+You will need a Xiaorui robot car, including an X3 development board (X3 sdb or X3 Pi) and a camera sensor (USB or MIPI camera) installed.
 
-launch启动文件默认配置使用的是usb camera。
+The launch file by default uses a USB camera.
 
-### 软件依赖
+### Software Requirements
 
-X3开发板（X3 sdb或者X3 Pi）安装了X3 Ubuntu/Linux系统，以及使用all_build.sh配置脚本（完整编译模式）配置编译出来的TogetherROS部署包install，部署包中包含运行此APP所需的以下package：
+The X3 development board (X3 sdb or X3 Pi) should have the X3 Ubuntu/Linux system installed, along with the deployment package "install" compiled using the all_build.sh setup script (full compilation mode). The deployment package contains the following packages required to run this APP:
 
-- mipi_cam package：发布图片msg
-- hobot_codec package：jpeg图片编码&发布
-- mono2d_body_detection package：发布人体、人头、人脸、人手框感知msg
-- hand_lmk_detection package：发布人手关键点感知msg
-- hand_gesture_detection package：发布手势识别结果msg
-- websocket package：渲染图片和ai感知msg
-- gesture_control package：手势交互
-- xrrobot package：小R机器人小车运动控制驱动
+- mipi_cam package: publish image messages
+- hobot_codec package: jpeg image encoding & publishing
+- mono2d_body_detection package: publish human body, head, face, and hand bounding perception messages
+- hand_lmk_detection package: publish hand key point perception messages
+- hand_gesture_detection package: publish gesture recognition result messages
+- websocket package: render images and AI perception messages
+- gesture_control package: gesture interaction
+- xrrobot package: Xiaorui robot car motion control driver
 
-注意！只有X3 Ubuntu系统支持使用launch文件运行。
+Note! Launch files can only be run on the X3 Ubuntu system.
 
-## 运行
+## Execution
 
-将TogetherROS部署包install拷贝到地平线X3开发板上（如果是在X3上编译，忽略拷贝步骤），并执行如下命令运行：
+Copy the TogetherROS deployment package "install" to the Horizon X3 development board (if compiling on X3, ignore the copying step), and run the following command:
 
 ### **Ubuntu**
 
 ```
 export COLCON_CURRENT_PREFIX=./install
 source ./install/setup.bash
-# config中为示例使用的模型，根据实际安装路径进行拷贝
-# 如果是板端编译（无--merge-install编译选项），拷贝命令为cp -r install/PKG_NAME/lib/PKG_NAME/config/ .，其中PKG_NAME为具体的package名。
-cp -r install/lib/mono2d_body_detection/config/ .
-cp -r install/lib/hand_lmk_detection/config/ .
-cp -r install/lib/hand_gesture_detection/config/ .
+# The config path here is an example path for the models used. Copy according to the actual installation path.
+# If compiling on-device (without the --merge-install compilation option), the copy command is cp -r install/PKG_NAME/lib/PKG_NAME/config/. where PKG_NAME is the specific package name.
+cp -r install/lib/mono2d_body_detection/config/.
+cp -r install/lib/hand_lmk_detection/config/.
+cp -r install/lib/hand_gesture_detection/config/.
 
-#启动launch文件，文件中配置使能了激活手势
+# Start the launch file, which includes enabling gesture activation.
 ros2 launch install/share/hobot_app_xrrobot_gesture_control/launch/hobot_app_xrrobot_gesture_control.launch.py
 ```
 
@@ -98,46 +98,45 @@ ros2 launch install/share/hobot_app_xrrobot_gesture_control/launch/hobot_app_xrr
 ```
 export ROS_LOG_DIR=/userdata/
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:./install/lib/
-
-# config中为示例使用的模型，根据实际安装路径进行拷贝
+```# Configuration for example models, copy based on actual installation path
 cp -r install/lib/mono2d_body_detection/config/ .
 cp -r install/lib/hand_lmk_detection/config/ .
 cp -r install/lib/hand_gesture_detection/config/ .
 
-# 启动图片发布pkg
+# Start image publishing package
 ./install/lib/mipi_cam/mipi_cam --ros-args -p out_format:=nv12 -p image_width:=960 -p image_height:=544 -p io_method:=shared_mem --log-level error &
-# 启动jpeg图片编码&发布pkg
+# Start jpeg image encoding & publishing package
 ./install/lib/hobot_codec/hobot_codec_republish --ros-args -p channel:=1 -p in_mode:=shared_mem -p in_format:=nv12 -p out_mode:=ros -p out_format:=jpeg -p sub_topic:=/hbmem_img -p pub_topic:=/image_jpeg --ros-args --log-level error &
-# 启动单目rgb人体、人头、人脸、人手框和人体关键点检测pkg
+# Start monocular RGB body, head, face, hand bounding box and key point detection package
 ./install/lib/mono2d_body_detection/mono2d_body_detection --ros-args --log-level error &
-# 启动人手关键点检测pkg
+# Start hand key point detection package
 ./install/lib/hand_lmk_detection/hand_lmk_detection --ros-args --log-level error &
-# 启动web展示pkg
+# Start web presentation package
 ./install/lib/websocket/websocket --ros-args -p image_topic:=/image_jpeg -p image_type:=mjpeg -p smart_topic:=/hobot_hand_gesture_detection --log-level error &
 
-# 启动手势识别pkg
+# Start gesture recognition package
 ./install/lib/hand_gesture_detection/hand_gesture_detection --log-level error &
 
-# 启动小车运动pkg
+# Start robot motion package
 ./install/lib/xrrobot/xrrobot --log-level error &
 
-# 启动手势交互pkg
+# Start gesture interaction package
 ./install/lib/gesture_control/gesture_control --ros-args -p activate_wakeup_gesture:=1
 ```
 
-## 注意事项
+## Note
 
-1. 板端使用launch启动，需要安装依赖，安装命令：`pip3 install lark-parser`。设备上只需要配置一次，断电重启不需要重新配置。
-2. 启动小车运动pkg，需要配置驱动：`cp install/lib/xrrobot/config/58-xrdev.rules /etc/udev/rules.d/`，拷贝后重启X3开发板。设备上只需要配置一次，断电重启不需要重新配置。
-3. 第一次运行web展示需要启动webserver服务，运行方法为:
+1. Launch is used on the board side, dependencies need to be installed with the command: `pip3 install lark-parser`. Configuration only needs to be done once on the device and doesn't need to be configured again after power-off and restart.
+2. To start the robot motion package, driver configuration is needed: `cp install/lib/xrrobot/config/58-xrdev.rules /etc/udev/rules.d/`, copy it and restart the X3 development board. Configuration only needs to be done once on the device and doesn't need to be configured again after power-off and restart.
+3. When running the web presentation for the first time, the webserver service needs to be started as follows:
 
-- cd 到websocket的部署路径下：`cd install/lib/websocket/webservice/`（如果是板端编译（无--merge-install编译选项）执行命令为`cd install/websocket/lib/websocket/webservice`）
-- 启动nginx：`chmod +x ./sbin/nginx && ./sbin/nginx -p .`
-- 设备重启需要重新配置。
+- cd to the deployment path of websocket: `cd install/lib/websocket/webservice/` (if compiled on the board (without the --merge-install compilation option), the command to execute would be `cd install/websocket/lib/websocket/webservice`)
+- Start nginx: `chmod +x ./sbin/nginx && ./sbin/nginx -p .`
+- Configuration needs to be redone after device restart.
 
-# 结果分析
+# Result Analysis
 
-## X3结果展示
+## X3 Result Display
 
 ```
 
@@ -148,69 +147,56 @@ cp -r install/lib/hand_gesture_detection/config/ .
 [gesture_control-7] [WARN] [1652965757.211624899] [GestureControlEngine]: do move, direction: 0, step: 0.500000
 [gesture_control-7] [WARN] [1652965757.232051230] [GestureControlEngine]: frame_ts_ms: 3698315457, track_id: 2, tracking_sta: 1, gesture: 14
 [gesture_control-7] [WARN] [1652965757.232207513] [GestureControlEngine]: do move, direction: 0, step: 0.500000
-[gesture_control-7] [WARN] [1652965757.595528850] [GestureControlEngine]: frame_ts_ms 3698315655, track id: 2 recved reset gesture: 5
-[gesture_control-7] [WARN] [1652965757.595700337] [GestureControlEngine]: cancel move
-```
+```The log snippet above captures part of the processing results of controlling the movement of a small car through gestures. Due to the activation of gesture activation in the launch file, in the frame with timestamp frame_ts_ms: 3698315325, the gesture "OK" (gesture: 11) activated the gesture control function. Starting from the timestamp frame_ts_ms: 3698315358, the car was controlled to move forward at a speed of 0.5m/s (do move, direction: 0, step: 0.500000) through the gesture "666" (gesture: 14). In the frame with timestamp frame_ts_ms 3698315655, the gesture "palm" (gesture: 5) reset the car's movement control function and stopped the car from moving (cancel move).
 
-以上log截取了部分通过手势控制小车运动的处理结果。由于launch文件中配置启用了手势激活功能，在时间戳frame_ts_ms: 3698315325的帧中，通过OK手势（gesture: 11）激活了手势控制功能，从时间戳frame_ts_ms: 3698315358开始通过666手势（gesture: 14）控制小车以0.5m/s的速度前进运动（do move, direction: 0, step: 0.500000）。在时间戳frame_ts_ms 3698315655的帧中，通过手掌手势（gesture: 5）重置了小车运动控制功能，同时使小车停止运动（cancel move）。
+## Web Effect Display
 
-## web效果展示
+# Frequently Asked Questions
 
+1. When running the startup command on Ubuntu, an error `-bash: ros2: command not found` occurs.
 
-
-# 常见问题
-
-1、Ubuntu下运行启动命令报错`-bash: ros2: command not found`
-
-当前终端未设置ROS2环境，执行命令配置环境：
-
+The ROS2 environment is not set in the current terminal. Run the following commands to set up the environment:
 ```
 export COLCON_CURRENT_PREFIX=./install
 source ./install/setup.bash
 ```
 
-在当前终端执行ros2命令确认当前终端环境是否生效：
-
+Execute a `ros2` command in the current terminal to confirm if the ROS2 environment is effective:
 ```
 # ros2
 usage: ros2 [-h] Call `ros2 <command> -h` for more detailed usage. ...
 
 ros2 is an extensible command-line tool for ROS 2.
-
-optional arguments:
-  -h, --help            show this help message and exit
 ```
 
-如果输出以上信息，说明ros2环境配置成功。
+If the above information is displayed, the ROS2 environment is successfully configured.
 
-注意！对于每个新打开的终端，都需要重新设置ROS2环境。
+Note: For each new terminal, the ROS2 environment needs to be set up again.
 
-2、做出控制手势，小车不运动
+2. Making a control gesture but the car does not move.
 
-2.1 检查小车运动控制pkg是否启动成功
+2.1 Check if the car movement control package is started successfully.
 
-重新开启一个终端，执行top命令查看是否有xrrobot进程，如果无，确认/etc/udev/rules.d/58-xrdev.rules配置文件是否存在，如果不存在，按照“使用介绍”章节的“注意事项”进行配置。
+Open a new terminal and run the `top` command to see if there is an `xrrobot` process. If not, verify if the configuration file `/etc/udev/rules.d/58-xrdev.rules` exists. If it does not exist, configure it according to the "Notes" section in the "Instructions".
 
-2.2 检查是否识别到手势
+2.2 Check if the gestures are recognized.
 
-做出控制手势后，查看输出log中“tracking_sta”关键字值是否为1，同时gesture值是否大于0，否则按照“功能介绍”部分手势动作举例确认手势是否标准。
+After making a control gesture, check if the value of the keyword "tracking_sta" in the output log is 1 and if the gesture value is greater than 0. Otherwise, refer to the examples of gesture actions in the "Function Introduction" section to confirm if the gestures are standard.
 
-2.3 手势控制是否激活
+2.3 Check if gesture control is activated.
 
-launch文件中配置使能了激活手势，必须先使用“OK”手势激活手势控制功能才能通过手势控制小车。
+The launch file configuration enables gesture activation. The gesture control of the car can only be done through gestures after activating the gesture control feature with the "OK" gesture.2.4 Issuing Motion Control Commands to the Robot
 
-2.4 向小车发布运动控制命令
+Open a new terminal (only valid for Ubuntu systems) and execute the command to control the robot's movement: `ros2 topic pub -r 10 /cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 0.1}}'` to confirm if the robot is moving correctly. If the robot does not rotate, check the robot's motion control module.
 
-重新开启一个终端（仅对Ubuntu系统有效），执行命令控制小车转动：`ros2 topic pub -r 10 /cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 0.1}}'`，用于确认小车运动是否正常。如果小车不转动，检查小车的运动控制模块。
+3. No Log Information Output in the Terminal
 
-3、终端无log信息输出
+3.1 Confirm if all nodes in the launch file have started successfully
 
-3.1 确认launch文件中的node是否都启动成功
+Open a new terminal (only valid for Ubuntu systems) and execute the `top` command to check if the nodes in the launch file are all running. If not, use the `ros2 run` command to start the corresponding node separately to determine the reason for startup failure.
 
-重新开启一个终端（仅对Ubuntu系统有效），执行top命令查看launch文件中的node进程是否都在运行，否则使用ros2 run命令单独启动相关node确认启动失败原因。
+3.2 Check if each node is publishing messages
 
-3.2 查看每个node是否都有发布msg
+Based on the topic names configured for publishing and subscribing in the launch file, use the `ros2 topic echo` command (only valid for Ubuntu systems) to display whether each topic has any messages being published. If not, investigate the reason for the lack of publications.
 
-根据launch文件中每个node配置的发布和订阅的topic名，使用ros2 topic echo（仅对Ubuntu系统有效）命令显示每个topic是否有消息发布，如果无，再确认没有发布的原因。
-
-注意！如果运行ros2 topic命令失败，执行命令安装依赖：`pip3 install netifaces`
+Note! If running the `ros2 topic` command fails, execute the command to install dependencies: `pip3 install netifaces`

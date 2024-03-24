@@ -1,117 +1,113 @@
-# 功能介绍
+English| [简体中文](./README_cn.md)
 
-body_tracking app功能为控制机器人跟随人体运动。
+# Function Introduction
 
-订阅智能结果ai_msgs，运行策略，确定跟随track及移动目的位置。
+The body_tracking app is used to control the robot to follow human body movements.
 
-通过发布消息直接控制机器人旋转和平移运动。
+Subscribe to intelligent results in ai_msgs, run strategies, determine the tracking and moving destination positions.
 
-详细的控制说明如下：
+Control robot rotation and translation movements directly by publishing messages.
 
-## 被跟随人体的选择
+Detailed control instructions are as follows:
 
-当启用唤醒手势时，识别到唤醒手势后，通过判断做手势的人手框是否在人体框内来确定跟随的人体。因此要求做唤醒手势时，人手需要在人体框内。
+## Selection of the Followed Human Body
 
-当未启用唤醒手势时，选择人体检测框宽度最大的人体作为被跟随人体。
+When the wake-up gesture is enabled, after recognizing the wake-up gesture, the person to follow is determined by judging whether the bounding box of the hand making the gesture is inside the human body bounding box. Therefore, when making the wake-up gesture, the hand needs to be within the human body bounding box.
 
-已有跟随人体的情况下，其他人体不会触发机器人控制。
+When the wake-up gesture is not enabled, the human body with the maximum width of the detection box is chosen as the followed person.
 
-只有当被跟随人体消失时，才会重新寻找新的跟随人体。连续track_serial_lost_num_thr帧未检测到人体，判断人体消失，支持启动和运行时动态配置。
+If there is already a followed person, other bodies will not trigger robot control.
 
-## 唤醒手势
+Only when the followed person disappears will a new followed person be searched for. If no human body is detected for consecutive track_serial_lost_num_thr frames, it is judged that the person has disappeared, supporting dynamic configuration during startup and runtime.
 
-唤醒手势用于唤醒机器人跟随人体的功能。
+## Wake-up Gesture
 
-当启用唤醒手势时，机器人会跟随做了唤醒手势的人体。一般用于人较多，环境复杂的场景，通过启用唤醒手势避免误触发控制功能。
+The wake-up gesture is used to activate the function of the robot following a human body.
 
-当未启用唤醒手势时，不会触发机器人跟随功能。
+When the wake-up gesture is enabled, the robot will follow the person making the wake-up gesture. It is generally used in scenarios with many people and complex environments to avoid accidental triggering of control functions by enabling the wake-up gesture.
 
-使用"OK"手势作为唤醒跟随手势，手势动作举例如下：
+When the wake-up gesture is not enabled, the robot follow function will not be triggered.
+
+"OK" gesture is used as the wake-up follow gesture, and the gesture action is as follows:
 
 <img src="images/image-ok.png" width="100" height="100"/>
 
-使用"Palm"手势作为取消跟随手势，取消后需要重新使用唤醒手势选择跟随人体。手势动作举例如下：
+"Palm" gesture is used as the cancel follow gesture, and after canceling, the wake-up gesture needs to be used again to select the followed person. The gesture action is as follows:
 
 <img src="images/image-palm.png" width="100" height="100"/>
 
 
-## 控制策略
+## Control Strategy
 
-已找到被跟随人体后，对于每一帧输入的智能结果处理策略如下：
+After the followed person is found, the strategy for processing the intelligent results input for each frame is as follows:
 
-判断人体检测框中心点和机器人之间的角度，角度超过阈值（activate_robot_rotate_thr，支持启动和运行时动态配置）时，控制机器人旋转，保持被跟随人体在机器人正前方。
+Determine the angle between the center point of the human body detection box and the robot. When the angle exceeds the threshold (activate_robot_rotate_thr, supports dynamic configuration during startup and runtime), control the robot to rotate and keep the followed person in front of the robot.
 
-当被跟随人体消失时，停止机器人运动，并寻找新的被跟随人体。
+When the followed person disappears, stop the robot's movement and search for a new followed person.
 
-当跟随人体在机器人正前方时，判断人体检测框上边界（检测框的top坐标），超过阈值（activate_robot_move_thr，支持启动和运行时动态配置）时，控制机器人运动。
+When the followed person is in front of the robot, if the top border of the human body detection box (top coordinate of the detection box) exceeds the threshold (activate_robot_move_thr, supports dynamic configuration during startup and runtime), control the robot's movement.
 
-# 使用介绍
+# User Guide
 
-## 依赖
+## Dependencies### Hardware Dependencies
 
-### 硬件依赖
+Requires the small R robot car, including the X3 development board (X3 sdb or X3 Pi) and camera sensor (USB or MIPI camera) installed.
 
-具备小R机器人小车，包括安装了X3开发板（X3 sdb或者X3 Pi）和camera传感器（USB或MIPI camera）。
+The default configuration of the launch startup file uses a USB camera.
 
-launch启动文件默认配置使用的是USB camera。
+### Software Dependencies
 
-### 软件依赖
+1. System
 
-1、系统
+X3 development board (X3 sdb or X3 Pi) is running X3 Ubuntu system.
 
-X3开发板（X3 sdb或者X3 Pi）安装了X3 Ubuntu系统。
+2. TogetherROS Deployment Package
 
-2、TogetherROS部署包
+Using the all_build.sh configuration script (full compilation mode) to compile the TogetherROS deployment package install, which includes the following packages required to run this APP:
 
-使用all_build.sh配置脚本（完整编译模式）配置编译出来的TogetherROS部署包install，部署包中包含运行此APP所需的以下package：
-
-- mipi_cam package：发布图片msg
-- hobot_codec package：jpeg图片编码&发布
-- mono2d_body_detection package：发布人体、人头、人脸、人手框感知msg
-- hand_lmk_detection package：发布人手关键点感知msg
-- hand_gesture_detection package：发布手势识别结果msg
-- websocket package：渲染图片和ai感知msg
-- body_tracking package：人体跟随
-- xrrobot package：小R机器人小车运动控制驱动
+- mipi_cam package: publishes image msg
+- hobot_codec package: encodes & publishes jpeg images
+- mono2d_body_detection package: perceives body, head, face, and hand bounding box msg
+- hand_lmk_detection package: perceives hand key points msg
+- hand_gesture_detection package: publishes gesture recognition results msg
+- websocket package: renders images and ai perception msg
+- body_tracking package: body tracking
+- xrrobot package: controls motion of small R robot car
 
 
-## 运行
+## Execution
 
-将TogetherROS部署包install拷贝到地平线X3开发板上（如果是在X3上编译，忽略拷贝步骤），并执行如下命令运行：
+Copy the TogetherROS deployment package install to the Horizon X3 development board (ignore copying steps if compiling on X3) and run the following commands:
 
 ### **Ubuntu**
 
-启动检测算法和人体跟随pkg：
+Start detection algorithms and body tracking pkg:
 
 ```
 export COLCON_CURRENT_PREFIX=./install
 source ./install/setup.bash
-# config中为示例使用的模型，根据实际安装路径进行拷贝
-# 如果是板端编译（无--merge-install编译选项），拷贝命令为cp -r install/PKG_NAME/lib/PKG_NAME/config/ .，其中PKG_NAME为具体的package名。
+# config contains example models, copy according to actual installation path
+# If compiling on the board (no --merge-install compilation option), the copy command is cp -r install/PKG_NAME/lib/PKG_NAME/config/ ., where PKG_NAME is the specific package name.
 cp -r install/lib/mono2d_body_detection/config/ .
 cp -r install/lib/hand_lmk_detection/config/ .
 cp -r install/lib/hand_gesture_detection/config/ .
 
-#启动launch文件，文件中配置使能了激活手势
+# Start the launch file, which enables gesture activation as configured in the file
 ros2 launch install/share/hobot_app_xrrobot_body_tracking/launch/hobot_app_xrrobot_body_tracking.launch.py
-```
+```## Notes
 
+1. This APP is only compatible with X3 Ubuntu system.
+2. Launch is used to start at the board end, and dependencies need to be installed with the command: `pip3 install lark-parser`. Configuration is required only once on the device and does not need to be reconfigured after power off and reboot.
+3. To start the car motion pkg, driver configuration is needed: `cp install/lib/xrrobot/config/58-xrdev.rules /etc/udev/rules.d/`, copy it and restart the X3 development board. Configuration is required only once on the device and does not need to be reconfigured after power off and reboot.
+4. To run the web display for the first time, the webserver service needs to be started, and the steps are as follows:
 
+- Navigate to the deployment path of the websocket: `cd install/lib/websocket/webservice/` (If it is compiled on the board end (without the --merge-install compilation option), the command to run is `cd install/websocket/lib/websocket/webservice`)
+- Start nginx: `chmod +x ./sbin/nginx && ./sbin/nginx -p .`
+- Reconfiguration is needed after device reboot.
 
-## 注意事项
+# Result Analysis
 
-1. 此APP只支持运行在X3 Ubuntu系统。
-1. 板端使用launch启动，需要安装依赖，安装命令：`pip3 install lark-parser`。设备上只需要配置一次，断电重启不需要重新配置。
-2. 启动小车运动pkg，需要配置驱动：`cp install/lib/xrrobot/config/58-xrdev.rules /etc/udev/rules.d/`，拷贝后重启X3开发板。设备上只需要配置一次，断电重启不需要重新配置。
-3. 第一次运行web展示需要启动webserver服务，运行方法为:
-
-- cd 到websocket的部署路径下：`cd install/lib/websocket/webservice/`（如果是板端编译（无--merge-install编译选项）执行命令为`cd install/websocket/lib/websocket/webservice`）
-- 启动nginx：`chmod +x ./sbin/nginx && ./sbin/nginx -p .`
-- 设备重启需要重新配置。
-
-# 结果分析
-
-## X3结果展示
+## X3 Result Display
 
 ```
 
@@ -133,24 +129,21 @@ ros2 launch install/share/hobot_app_xrrobot_body_tracking/launch/hobot_app_xrrob
 
 ```
 
-以上log截取了部分app通过launch文件启动后的输出。启动后先打印相关配置（TrackCfg param）。由于launch文件中配置不启用手势激活功能，检测到人体后小车就开始进入跟随状态（tracking_sta值为1），并以0.3m/s的速度前进运动（RobotCtl, angular: 0 0 0, linear: 0.3 0 0）靠近人体。
+The above log snippet shows some output after the app is launched via the launch file. Upon starting, relevant configurations are printed first (TrackCfg param). Since the gesture activation feature is not enabled in the launch file, the car enters the follow-up state once a human body is detected (tracking_sta value is 1), and it moves forward at a speed of 0.3m/s (RobotCtl, angular: 0 0 0, linear: 0.3 0 0) to approach the human body.
 
-## web效果展示
+## Web Effect Display
 
+# FAQ
 
+1. Error reported when running the startup command under Ubuntu: `-bash: ros2: command not found`
 
-# 常见问题
-
-1、Ubuntu下运行启动命令报错`-bash: ros2: command not found`
-
-当前终端未设置ROS2环境，执行命令配置环境：
+The current terminal has not set up the ROS2 environment. Execute the following commands to configure the environment:
 
 ```
 export COLCON_CURRENT_PREFIX=./install
 source ./install/setup.bash
-```
-
-在当前终端执行ros2命令确认当前终端环境是否生效：
+``````
+Check whether the current terminal environment is effective by executing the ros2 command in the current terminal:
 
 ```
 # ros2
@@ -162,32 +155,33 @@ optional arguments:
   -h, --help            show this help message and exit
 ```
 
-如果输出以上信息，说明ros2环境配置成功。
+If the above information is output, it indicates that the ros2 environment configuration is successful.
 
-注意！对于每个新打开的终端，都需要重新设置ROS2环境。
+Note! For each new terminal opened, the ROS2 environment needs to be set again.
 
-2、小车不运动
+2. Car is not moving
 
-2.1 检查小车运动控制pkg是否启动成功
+2.1 Check if the pkg for controlling the car's movement is started successfully
 
-重新开启一个终端，执行top命令查看是否有xrrobot进程，如果无，确认/etc/udev/rules.d/58-xrdev.rules配置文件是否存在，如果不存在，按照“使用介绍”章节的“注意事项”进行配置。
+Open a new terminal and execute the top command to check if there is an xrrobot process running. If not, confirm if the /etc/udev/rules.d/58-xrdev.rules configuration file exists. If it does not exist, configure it according to the "Notes" section in the "Usage Guide."
 
-2.2 检查是否检测到人体
+2.2 Check if human detection is detected
 
-查看输出log中“tracking_sta”关键字值是否为1。
+Check if the value of the "tracking_sta" keyword in the output log is 1.
 
-2.3 向小车发布运动控制命令
+2.3 Send motion control commands to the car
 
-重新开启一个终端（仅对Ubuntu系统有效），执行命令控制小车转动：`ros2 topic pub -r 10 /cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 0.1}}'`，用于确认小车运动是否正常。如果小车不转动，检查小车的运动控制模块。
+Open a new terminal (only valid for Ubuntu systems), execute the command to control the car's rotation: `ros2 topic pub -r 10 /cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0, z: 0}, angular: {x: 0, y: 0, z: 0.1}}'` to confirm if the car's movement is normal. If the car does not rotate, check the car's motion control module.
 
-3、终端无log信息输出
+3. No log information output in the terminal
 
-3.1 确认launch文件中的node是否都启动成功
+3.1 Confirm if all nodes in the launch file are started successfully
 
-重新开启一个终端（仅对Ubuntu系统有效），执行top命令查看launch文件中的node进程是否都在运行，否则使用ros2 run命令单独启动相关node确认启动失败原因。
+Open a new terminal (only valid for Ubuntu systems), execute the top command to check if the node processes in the launch file are all running. If not, use the ros2 run command to start the related nodes separately to confirm the reason for the startup failure.
 
-3.2 查看每个node是否都有发布msg
+3.2 Check if each node is publishing messages
 
-根据launch文件中每个node配置的发布和订阅的topic名，使用ros2 topic echo（仅对Ubuntu系统有效）命令显示每个topic是否有消息发布，如果无，再确认没有发布的原因。
+Based on the topic names configured for publishing and subscribing in each node in the launch file, use the ros2 topic echo (only valid for Ubuntu systems) command to display if messages are being published for each topic. If not, reconfirm the reasons for not publishing.
 
-注意！如果运行ros2 topic命令失败，执行命令安装依赖：`pip3 install netifaces`
+Note! If running the ros2 topic command fails, execute the command to install dependencies: `pip3 install netifaces`
+```

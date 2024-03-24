@@ -1,18 +1,20 @@
+English| [简体中文](./README_cn.md)
+
 ## package name
 
 xrrobot 
 
-## package功能
+## package functionality
 
-小R机器人 msg，目前只使用到IMU msg，包括加速度计和陀螺仪。
+小R机器人 msg, currently only uses IMU msg, including accelerometer and gyroscope.
 
-xrrobot发布/raw_imu话题，供上层应用做数据处理和机器人定位。
+xrrobot publishes on the /raw_imu topic for higher-level applications to process data and robot localization.
 
-## package编译
+## package compilation
 
 `colcon build --packages-select xrrobot xrrobot_msgs`
 
-## 运行package
+## running the package
 
 ```
 export COLCON_CURRENT_PREFIX=./install
